@@ -14,43 +14,39 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ROUTES
 app.use('/products', productRoutes);
 app.use('/cart', cartRoutes);
 app.use('/auth', authRoutes);
 app.use('/orders', orderRoutes);
 
-app.get('/app', (req, res) => {
-  res.json({ message: 'E-Commerce API is running 🚀' });
+app.get('/', (req, res) => {
+  res.json({ message: 'E-Commerce API running 🚀' });
 });
 
 
-// ✅ SWAGGER CONFIG
+// Swagger
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
       title: 'E-Commerce API',
       version: '1.0.0',
-      description: 'API documentation for the E-Commerce backend'
+      description: 'API documentation',
     },
   },
   apis: ['./routes/*.js'],
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
-
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
-// ✅ Export for Vercel
-module.exports = app;
-
-
-// ✅ Run locally only
+// LOCAL SERVER ONLY
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
   });
 }
+
+module.exports = app;
